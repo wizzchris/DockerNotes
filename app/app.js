@@ -18,14 +18,17 @@ app.get('/' , function(req , res){
 // connect to database
 if(process.env.DB_HOST) {
   mongoose.connect(process.env.DB_HOST);
+  console.log("Connected to database successfully")
 
-  app.get("/posts" , function(req,res){
+}
+
+app.get("/posts" , function(req,res){
+	console.log("/posts called")
       Post.find({} , function(err, posts){
         if(err) return res.send(err);
         res.render("posts/index" ,{posts:posts});
       })
-  });
-}
+ });
 
 app.get('/fibonacci/:n' , function(req,res){
 
