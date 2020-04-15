@@ -1,0 +1,41 @@
+version: "3.7"
+services:
+  app:
+    build:
+      context: .
+      dockerfile: appdockerfile
+    networks:
+      gennet:
+        ipv4_address: 172.16.238.10
+    environment:
+      DB_HOST: mongod://176.16.238.8:27017/posts
+    volumes:
+      - /Users/chris/Documents/Sparta/Docker/app:/usr/src/app
+    ports:
+      - "80:3000"
+    container_name: app
+    depends_on:
+      - db
+    command: apt-get install software-properties-common -y
+    command: npm install pm2
+    command: apt-get install nginx
+    command: node /usr/src/app/seeds/seed.js
+    command: node /usr/src/app/app.js
+
+  db:
+    image: mongo
+    restart: always
+    ports:
+      - "27017:27017"
+    networks:
+      gennet:
+        ipv4_address: 172.16.238.8
+    container_name: db
+    command: mongod --bind_ip_all
+
+networks:
+  gennet:
+    ipam:
+      driver: default
+      config:
+        - subnet: "172.16.238.0/24"

@@ -1,0 +1,6 @@
+FROM node:latest
+RUN mkdir -p /usr/src/app
+WORKDIR /usr/src/app
+COPY app/ /usr/src/app/
+ENV DB_HOST=mongod://172.16.238.8:27017/posts
+RUN npm install
