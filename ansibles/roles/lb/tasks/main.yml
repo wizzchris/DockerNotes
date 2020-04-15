@@ -1,0 +1,48 @@
+---
+- hosts: node7
+  become: yes
+  tasks:
+
+  - name: Update Apt and Upgrade Apt
+    apt:
+      update_cache: yes
+      upgrade: dist
+
+  - name: Install git
+    apt:
+      name: git
+
+  - name: Install the gpg key for nodejs LTS
+    apt_key:
+      url: "https://deb.nodesource.com/gpgkey/nodesource.gpg.key"
+
+  - name: install software properties common
+    shell: apt-get install software-properties-common -y
+
+  - name: Install the nodejs LTS repos
+    apt_repository:
+      repo: "deb https://deb.nodesource.com/node_12.x xenial main"
+
+  - name: Install the nodejs
+    apt:
+      name: nodejs
+
+  - name: install pm2
+    npm:
+      name: pm2
+      global: yes
+
+  - name: install nginx
+    apt:
+      name: nginx
+
+  - name: adding nginx conf file
+    copy:
+      src: /home/vagrant/ansibles/nginxconf.conf
+      dest: /home/vagrant/nginxconf.conf
+
+  - name: Change configuration file
+    shell: 'cat /home/vagrant/nginxconf.conf > /etc/nginx/nginx.conf'
+
+  - name: restart Nginx
+    shell: systemctl restart nginx

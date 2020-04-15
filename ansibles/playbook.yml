@@ -1,0 +1,30 @@
+---
+- hosts: node1
+  become: yes
+  tasks:
+
+  - name: Update Apt and Upgrade Apt
+    apt:
+      update_cache: yes
+      upgrade: dist
+
+  - name: Install Java
+    apt:
+      name: default-jre
+
+  - name: Copy private key to keys
+    copy:
+      src: /home/vagrant/key/id_rsa
+      dest: /home/vagrant/.ssh/id_rsa
+      mode: 0777
+
+  - name: Change inventory file
+    shell: 'cat /home/vagrant/ansibles/inventory.yml > /etc/ansible/hosts'
+
+  - name: Install pip3
+    apt:
+      name: python3-pip
+
+  - name: Pip install docker
+    pip:
+      name: ansible-container[docker,k8s]

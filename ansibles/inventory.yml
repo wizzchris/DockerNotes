@@ -1,0 +1,39 @@
+all:
+  hosts:
+    node1:
+      ansible_connection: local
+  children:
+    Apps:
+      hosts:
+        node2:
+          ansible_host: 10.0.10.12
+        node3:
+          ansible_host: 10.0.10.13
+    Data_Bases:
+      hosts:
+        node4:
+          ansible_host: 10.0.10.14
+        node5:
+          ansible_host: 10.0.10.15
+        node6:
+          ansible_host: 10.0.10.16
+    Load_Balancer:
+      hosts:
+        node7:
+          ansible_host: 10.0.10.17
+    ELK:
+      hosts:
+        elst:
+          ansible_host: 10.0.10.110
+        kibana:
+          ansible_host: 10.0.10.18
+        logstash:
+          ansible_host: 10.0.10.19
+  vars:
+    ansible_connection: ssh
+    ansible_host: vagrant
+    ansible_user: vagrant
+    ansible_ssh_private_key_file: /home/vagrant/.ssh/id_rsa
+    host_key_checking: False
+    ansible_ssh_common_args: '-o StrictHostKeyChecking=no'
+    ansible_python_interpreter: /usr/bin/python3
