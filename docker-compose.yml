@@ -6,9 +6,8 @@ services:
       dockerfile: appdockerfile
     networks:
       gennet:
-        ipv4_address: 172.16.238.10
     environment:
-      DB_HOST: mongod://176.16.238.8:27017/posts
+      DB_HOST: mongod://db:27017/posts
     volumes:
       - /Users/chris/Documents/Sparta/Docker/app:/usr/src/app
     ports:
@@ -26,7 +25,6 @@ services:
       - "27017:27017"
     networks:
       gennet:
-        ipv4_address: 172.16.238.8
     container_name: db
     command: mongod --bind_ip_all
 
