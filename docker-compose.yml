@@ -16,9 +16,6 @@ services:
     container_name: app
     depends_on:
       - db
-    command: apt-get install software-properties-common -y
-    command: npm install pm2
-    command: apt-get install nginx
     command: node /usr/src/app/seeds/seed.js
     command: node /usr/src/app/app.js
 
