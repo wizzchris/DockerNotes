@@ -8,4 +8,4 @@ RUN npm install
 RUN mkdir -p /usr/src/appsetup
 WORKDIR /usr/src/appsetup
 COPY appsetup.sh /usr/src/appsetup/appsetup.sh
-CMD [./appsetup.sh]
+CMD ./appsetup.sh
