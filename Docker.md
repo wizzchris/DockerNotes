@@ -72,10 +72,91 @@ You can remove the container with the command
 docker rm --force
 ````
 
-## **Ansible and Docker**
+## **Docker Compose**
+Docker compose allows us to run multiple containers at once. It also allows us to run further commands.
+To create a docker compose, make a file called docker-compose.yml and start with the version of docker you want the containers to be run with.
+You then add services. From here you specify the conatiners names and the images. The docker compose I have made is
+````
+version: "3.7"
+services:
 
-Ansible can be used to create containers. This means we can make them even more portable. This is because we can then reproduce it in vagrant cloud or on docker.
-We can do this with ansible container
-This will allow us to describe the application in a single YAML file rather than a Dockerfile.
+  lb:
+    build:
+      context: ./
+      dockerfile: lbdockerfile
+    container_name: lb
+    restart: always
+    ports:
+      - "80:80"
+    depends_on:
+      - db
+      - db1
+      - db2
+      - app
+      - app1
+      - app2
 
-When installing ansible container we need to rely upon supported container engines for building and running the project
+  app:
+    image: dockernotes_app
+    container_name: app
+    restart: always
+    environment:
+      DB_HOST: mongodb://db:27017,db1:27017,db2:27017/posts?replicaSet=rs0
+    depends_on:
+      - db
+      - db1
+      - db2
+
+  app1:
+    image: dockernotes_app
+    container_name: app1
+    restart: always
+    environment:
+      DB_HOST: mongodb://db:27017,db1:27017,db2:27017/posts?replicaSet=rs0
+    depends_on:
+      - db
+      - db1
+      - db2
+
+  app2:
+    image: dockernotes_app
+    container_name: app2
+    restart: always
+    environment:
+      DB_HOST: mongodb://db:27017,db1:27017,db2:27017/posts?replicaSet=rs0
+    depends_on:
+      - db
+      - db1
+      - db2
+
+  db_init:
+    image: dockernotes_db
+    container_name: db_init
+    command: ./setup.sh
+    depends_on:
+      - db
+      - db1
+      - db2
+
+  db:
+    image: mongo
+    container_name: db
+    restart: always
+    command: mongod --bind_ip_all --replSet rs0
+
+  db1:
+    image: mongo
+    container_name: db1
+    restart: always
+    command: mongod --bind_ip_all --replSet rs0
+
+  db2:
+    image: mongo
+    container_name: db2
+    restart: always
+    command: mongod --bind_ip_all --replSet rs0
+````
+Many of the commands are self explanatory. For more choices follow the link
+````
+https://docs.docker.com/compose/compose-file/#entrypoint
+````
