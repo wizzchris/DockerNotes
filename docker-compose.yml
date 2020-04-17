@@ -4,32 +4,52 @@ services:
     build:
       context: ./
       dockerfile: appdockerfile
+    container_name: app
     restart: always
     networks:
       gennet:
     environment:
-      DB_HOST: mongodb://db:27017/posts
+      DB_HOST: mongodb://db:27017,db1:27017,db2:27017/posts?replicaSet=rs0
     volumes:
       - /Users/chris/Documents/Sparta/Docker/app:/usr/src/app
+      - ./appsetup.sh:/usr/src/appsetup/appsetup.sh
     ports:
       - "80:3000"
-    container_name: app
     depends_on:
       - db
+      - db1
+      - db2
 
   db:
-    image: mongo
-    restart: always
-    ports:
-      - "27017:27017"
-    networks:
-      gennet:
+    build:
+      context: ./
+      dockerfile: dbdockerfile
     container_name: db
-    command: mongod --bind_ip_all
+    restart: always
+    networks:
+      - gennet
+    volumes:
+      - ./setup.sh:/usr/src/setup/setup.sh
+    command: mongod --bind_ip_all --replSet rs0
+    depends_on:
+      - db1
+      - db2
+
+  db1:
+    image: mongo
+    container_name: db1
+    restart: always
+    networks:
+      - gennet
+    command: mongod --bind_ip_all --replSet rs0
+
+  db2:
+    image: mongo
+    container_name: db2
+    restart: always
+    networks:
+      - gennet
+    command: mongod --bind_ip_all --replSet rs0
 
 networks:
   gennet:
-    ipam:
-      driver: default
-      config:
-        - subnet: "172.16.238.0/24"

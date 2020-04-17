@@ -1,2 +1,5 @@
 FROM mongo
-RUN mongod --bind_ip_all
+RUN mkdir -p /usr/src/setup
+WORKDIR /usr/src/setup
+COPY setup.sh /usr/src/setup/setup.sh
+CMD [./setup.sh]

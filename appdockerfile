@@ -5,4 +5,7 @@ COPY app/ /usr/src/app/
 ENV DB_HOST=mongodb://db:27017/posts
 RUN npm install pm2
 RUN npm install
-CMD node seeds/seed.js && node app.js
+RUN mkdir -p /usr/src/appsetup
+WORKDIR /usr/src/appsetup
+COPY appsetup.sh /usr/src/appsetup/appsetup.sh
+CMD [./appsetup.sh]
