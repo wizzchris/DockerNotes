@@ -1,4 +1,4 @@
-# README for Docker
+# README For Docker
 In this repository I write notes for docker and try it out with the app and db repositories I have used before.
 To use this repository ensure docker is installed and run the command:
 ````
