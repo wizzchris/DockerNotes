@@ -1,0 +1,6 @@
+FROM nginx
+RUN mkdir -p /usr/src/nginx
+WORKDIR /usr/src/nginx
+COPY nginxsetup.sh /usr/src/nginx/nginxsetup.sh
+COPY nginxconf.conf /usr/src/nginx/nginxconf.conf
+CMD ./nginxsetup.sh

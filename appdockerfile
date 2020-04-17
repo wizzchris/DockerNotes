@@ -2,10 +2,10 @@ FROM node:latest
 RUN mkdir -p /usr/src/app
 WORKDIR /usr/src/app
 COPY app/ /usr/src/app/
-ENV DB_HOST=mongodb://db:27017/posts
+ENV DB_HOST=mongodb://db:27017,db1:27017,db2:27017/posts?replicaSet=rs0
 RUN npm install pm2
 RUN npm install
 RUN mkdir -p /usr/src/appsetup
 WORKDIR /usr/src/appsetup
 COPY appsetup.sh /usr/src/appsetup/appsetup.sh
-CMD [./appsetup.sh]
+CMD ./appsetup.sh

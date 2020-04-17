@@ -3,11 +3,11 @@
 echo "Starting replica set initialize"
 until mongo --host mongodb://db --eval "print(\"waited for connection\")"
 do
-    sleep 60
+    sleep 2
 done
 mongo mongodb://db <<EOF
 var cfg = {
-    "_id": "rs",
+    "_id": "rs0",
     "version": 1,
     "members": [
         {

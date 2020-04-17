@@ -1,5 +1,26 @@
 version: "3.7"
 services:
+
+  # lb:
+  #   build:
+  #     context: ./
+  #     dockerfile: lbdockerfile
+  #   container_name: lb
+  #   restart: always
+  #   networks:
+  #     gennet:
+  #   volumes:
+  #     - ./nginxsetup.sh:/usr/src/nginxsetup.sh
+  #     - ./nginxconf.conf:/usr/src/nginx/nginxconf.conf
+  #   ports:
+  #     - "80:80"
+  #   depends_on:
+  #     - db
+  #     - db1
+  #     - db2
+  #     - app
+  #     - app1
+  #     - app2
   app:
     build:
       context: ./
@@ -13,8 +34,42 @@ services:
     volumes:
       - /Users/chris/Documents/Sparta/Docker/app:/usr/src/app
       - ./appsetup.sh:/usr/src/appsetup/appsetup.sh
-    ports:
-      - "80:3000"
+    depends_on:
+      - db
+      - db1
+      - db2
+
+  app1:
+    build:
+      context: ./
+      dockerfile: appdockerfile
+    container_name: app1
+    restart: always
+    networks:
+      gennet:
+    environment:
+      DB_HOST: mongodb://db:27017,db1:27017,db2:27017/posts?replicaSet=rs0
+    volumes:
+      - /Users/chris/Documents/Sparta/Docker/app:/usr/src/app
+      - ./appsetup.sh:/usr/src/appsetup/appsetup.sh
+    depends_on:
+      - db
+      - db1
+      - db2
+
+  app2:
+    build:
+      context: ./
+      dockerfile: appdockerfile
+    container_name: app2
+    restart: always
+    networks:
+      gennet:
+    environment:
+      DB_HOST: mongodb://db:27017,db1:27017,db2:27017/posts?replicaSet=rs0
+    volumes:
+      - /Users/chris/Documents/Sparta/Docker/app:/usr/src/app
+      - ./appsetup.sh:/usr/src/appsetup/appsetup.sh
     depends_on:
       - db
       - db1
