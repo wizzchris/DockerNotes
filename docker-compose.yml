@@ -75,20 +75,26 @@ services:
       - db1
       - db2
 
-  db:
+  db_init:
     build:
       context: ./
       dockerfile: dbdockerfile
+    container_name: db_init
+    command: ./setup.sh
+    networks:
+      - gennet
+    depends_on:
+      - db
+      - db1
+      - db2
+
+  db:
+    image: mongo
     container_name: db
     restart: always
     networks:
       - gennet
-    volumes:
-      - ./setup.sh:/usr/src/setup/setup.sh
     command: mongod --bind_ip_all --replSet rs0
-    depends_on:
-      - db1
-      - db2
 
   db1:
     image: mongo
