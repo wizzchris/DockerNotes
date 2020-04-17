@@ -1,88 +1,59 @@
 version: "3.7"
 services:
 
-  # lb:
-  #   build:
-  #     context: ./
-  #     dockerfile: lbdockerfile
-  #   container_name: lb
-  #   restart: always
-  #   networks:
-  #     gennet:
-  #   volumes:
-  #     - ./nginxsetup.sh:/usr/src/nginxsetup.sh
-  #     - ./nginxconf.conf:/usr/src/nginx/nginxconf.conf
-  #   ports:
-  #     - "80:80"
-  #   depends_on:
-  #     - db
-  #     - db1
-  #     - db2
-  #     - app
-  #     - app1
-  #     - app2
-  app:
+  lb:
     build:
       context: ./
-      dockerfile: appdockerfile
+      dockerfile: lbdockerfile
+    container_name: lb
+    restart: always
+    ports:
+      - "80:80"
+    depends_on:
+      - db
+      - db1
+      - db2
+      - app
+      - app1
+      - app2
+
+  app:
+    image: dockernotes_app
     container_name: app
     restart: always
-    networks:
-      gennet:
     environment:
       DB_HOST: mongodb://db:27017,db1:27017,db2:27017/posts?replicaSet=rs0
-    volumes:
-      - /Users/chris/Documents/Sparta/Docker/app:/usr/src/app
-      - ./appsetup.sh:/usr/src/appsetup/appsetup.sh
     depends_on:
       - db
       - db1
       - db2
 
   app1:
-    build:
-      context: ./
-      dockerfile: appdockerfile
+    image: dockernotes_app
     container_name: app1
     restart: always
-    networks:
-      gennet:
     environment:
       DB_HOST: mongodb://db:27017,db1:27017,db2:27017/posts?replicaSet=rs0
-    volumes:
-      - /Users/chris/Documents/Sparta/Docker/app:/usr/src/app
-      - ./appsetup.sh:/usr/src/appsetup/appsetup.sh
     depends_on:
       - db
       - db1
       - db2
 
   app2:
-    build:
-      context: ./
-      dockerfile: appdockerfile
+    image: dockernotes_app
     container_name: app2
     restart: always
-    networks:
-      gennet:
     environment:
       DB_HOST: mongodb://db:27017,db1:27017,db2:27017/posts?replicaSet=rs0
-    volumes:
-      - /Users/chris/Documents/Sparta/Docker/app:/usr/src/app
-      - ./appsetup.sh:/usr/src/appsetup/appsetup.sh
     depends_on:
       - db
       - db1
       - db2
 
   db_init:
-    build:
-      context: ./
-      dockerfile: dbdockerfile
+    image: dockernotes_db
     container_name: db_init
     command: ./setup.sh
-    networks:
-      - gennet
     depends_on:
       - db
       - db1
@@ -92,25 +63,16 @@ services:
     image: mongo
     container_name: db
     restart: always
-    networks:
-      - gennet
     command: mongod --bind_ip_all --replSet rs0
 
   db1:
     image: mongo
     container_name: db1
     restart: always
-    networks:
-      - gennet
     command: mongod --bind_ip_all --replSet rs0
 
   db2:
     image: mongo
     container_name: db2
     restart: always
-    networks:
-      - gennet
     command: mongod --bind_ip_all --replSet rs0
-
-networks:
-  gennet:

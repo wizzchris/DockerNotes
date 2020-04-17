@@ -1,4 +1,4 @@
 #!/bin/bash
-sleep 150
+sleep 90
 cat /usr/src/nginx/nginxconf.conf > /etc/nginx/nginx.conf
-systemctl restart nginx
+nginx -s reload
