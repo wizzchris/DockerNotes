@@ -1,0 +1,3 @@
+FROM logstash
+RUN rm /etc/logstash/conf.d/logstash.conf
+COPY logstash.conf /etc/logstash/conf.d/logstash.conf

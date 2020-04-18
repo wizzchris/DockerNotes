@@ -1,6 +1,36 @@
 version: "3.7"
 services:
 
+  kibana:
+    build:
+      context: ./
+      dockerfile: kibanadockerfile
+    container_name: kibana
+    restart: always
+    ports:
+      - "5601:5601"
+    depends_on:
+      - elst
+
+  elst:
+    build:
+      context: ./
+      dockerfile: elasticdockerfile
+    container_name: elst
+    restart: always
+    ports:
+      - "9200:9200"
+
+  log:
+    build:
+      context: ./
+      dockerfile: logstashdockerfile
+    container_name: log
+    restart: always
+    depends_on:
+      - kibana
+      - elst
+
   lb:
     build:
       context: ./
@@ -10,6 +40,9 @@ services:
     ports:
       - "80:80"
     depends_on:
+      - log
+      - kibana
+      - elst
       - db
       - db1
       - db2
@@ -24,6 +57,9 @@ services:
     environment:
       DB_HOST: mongodb://db:27017,db1:27017,db2:27017/posts?replicaSet=rs0
     depends_on:
+      - log
+      - kibana
+      - elst
       - db
       - db1
       - db2
@@ -35,6 +71,9 @@ services:
     environment:
       DB_HOST: mongodb://db:27017,db1:27017,db2:27017/posts?replicaSet=rs0
     depends_on:
+      - log
+      - kibana
+      - elst
       - db
       - db1
       - db2
@@ -46,6 +85,9 @@ services:
     environment:
       DB_HOST: mongodb://db:27017,db1:27017,db2:27017/posts?replicaSet=rs0
     depends_on:
+      - log
+      - kibana
+      - elst
       - db
       - db1
       - db2
@@ -55,6 +97,9 @@ services:
     container_name: db_init
     command: ./setup.sh
     depends_on:
+      - log
+      - kibana
+      - elst
       - db
       - db1
       - db2
@@ -64,15 +109,27 @@ services:
     container_name: db
     restart: always
     command: mongod --bind_ip_all --replSet rs0
+    depends_on:
+      - log
+      - kibana
+      - elst
 
   db1:
     image: mongo
     container_name: db1
     restart: always
     command: mongod --bind_ip_all --replSet rs0
+    depends_on:
+      - log
+      - kibana
+      - elst
 
   db2:
     image: mongo
     container_name: db2
     restart: always
     command: mongod --bind_ip_all --replSet rs0
+    depends_on:
+      - log
+      - kibana
+      - elst
