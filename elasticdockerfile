@@ -1,3 +1,2 @@
-FROM elasticsearch
-RUN rm /etc/elasticsearch/elasticsearch.yml
+FROM elasticsearch:7.6.2
 COPY elasticsearch.yml /etc/elasticsearch/elasticsearch.yml
