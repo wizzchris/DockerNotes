@@ -1,8 +1,10 @@
 #!/bin/bash
 metricbeat modules enable system
 filebeat modules enable system
-systemctl start metricbeat
-systemctl start filebeat
+filebeat modules enable nginx
+service metricbeat start
+service filebeat start
+
 sleep 20
 echo "Starting replica set initialize"
 until mongo --host mongodb://db --eval "print(\"waited for connection\")"
