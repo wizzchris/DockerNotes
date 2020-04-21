@@ -10,13 +10,7 @@
 # Please consult the documentation for further information on configuration options:
 # https://www.elastic.co/guide/en/elasticsearch/reference/index.html
 #
-# ---------------------------------- Cluster -----------------------------------
-#
-# Use a descriptive name for your cluster:
-#
-#cluster.name: production
-#
-# ------------------------------------ Node ------------------------------------
+#----------- Node ------------------------------------
 #
 # Use a descriptive name for the node:
 #
@@ -30,11 +24,11 @@
 #
 # Path to directory where to store the data (separate multiple locations by comma):
 #
-path.data: /var/lib/elasticsearch
+path.data: /usr/share/elasticsearch/data
 #
 # Path to log files:
 #
-path.logs: /var/log/elasticsearch
+path.logs: /usr/share/elasticsearch/logs
 #
 # ----------------------------------- Memory -----------------------------------
 #
@@ -87,10 +81,9 @@ path.logs: /var/log/elasticsearch
 #
 #action.destructive_requires_name: true
 
-cluster.name: production
+cluster.name: "docker-cluster"
+network.host: 0.0.0.0
 node.name: node-1
-node.master: true
-network.host: elst
-http.port: 9200
-discovery.seed_hosts: ["host1"]
-cluster.initial_master_nodes: ["elst"]
+cluster.initial_master_nodes: ["node-1"]
+discovery.seed_hosts:
+  - elst

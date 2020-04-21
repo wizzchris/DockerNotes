@@ -2,9 +2,7 @@ version: "3.7"
 services:
 
   kibana:
-    build:
-      context: ./
-      dockerfile: kibanadockerfile
+    image: dockernotes_kibana
     container_name: kibana
     restart: always
     ports:
@@ -13,18 +11,14 @@ services:
       - elst
 
   elst:
-    build:
-      context: ./
-      dockerfile: elasticdockerfile
+    image: dockernotes_elst
     container_name: elst
     restart: always
     ports:
       - "9200:9200"
 
   log:
-    build:
-      context: ./
-      dockerfile: logstashdockerfile
+    image: logstash:7.6.2
     container_name: log
     restart: always
     depends_on:

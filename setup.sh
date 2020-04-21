@@ -1,8 +1,8 @@
 #!/bin/bash
-sudo metricbeat modules enable system
-sudo filebeat modules enable system
-sudo systemctl start metricbeat
-sudo systemctl start filebeat
+metricbeat modules enable system
+filebeat modules enable system
+systemctl start metricbeat
+systemctl start filebeat
 sleep 20
 echo "Starting replica set initialize"
 until mongo --host mongodb://db --eval "print(\"waited for connection\")"

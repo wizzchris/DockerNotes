@@ -1,2 +1,2 @@
 FROM kibana:7.6.2
-COPY kibana.yml /etc/kibana/kibana.yml
+COPY kibana.yml /usr/share/kibana/config/kibana.yml
